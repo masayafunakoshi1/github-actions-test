@@ -23,7 +23,7 @@ jobs:
         run: echo ${{ steps.service-datadog-yaml.outputs.result }}
       
       - name: Checking if its running correctly
-        run: echo ${{ steps.service-datadog-yaml.outputs.result.dd-service }}
+        run: echo ${{ steps.service-datadog-yaml.outputs.result['dd-service'] }}
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
       #   with:
       #     schema-version: v2.1
