@@ -48,10 +48,11 @@ jobs:
         id: dd-service-data
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.[] |[.dd-service, .team, .application, .contacts[slack]]'
+          cmd: yq '.' 'service.datadog.yaml'
 
       - name: Check if dd-service output is working
-        run: echo "${{ steps.dd-service-data.outputs.result }}"
+        run: echo "${{ steps.dd-service-data.outputs.result['team'] }} ${{ steps.dd-service-data.outputs.result.team }}"
+
 
 
 
