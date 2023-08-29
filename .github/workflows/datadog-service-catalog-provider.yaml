@@ -50,7 +50,7 @@ jobs:
       - id: dd-contacts-3
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.contacts.slack' 'service.datadog.yaml'   
+          cmd: yq '.contacts[2]' 'service.datadog.yaml'   
       - id: dd-contacts-4
         uses: mikefarah/yq@master 
         with:
@@ -75,7 +75,7 @@ jobs:
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
       - name: Checking if its running correctly
-        run: echo "${{ steps.dd-contacts.outputs.result }}" 
+        run: echo "${{ steps.dd-contacts.outputs.result[2] }}" 
       # - name: Checking if its running correctly
       #   run: echo "${{ steps.dd-contacts-2.outputs.result }}" 
       - name: Checking if its running correctly
