@@ -71,14 +71,14 @@ jobs:
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
       - name: Checking if its running correctly
-        run: echo "${{ steps.dd-contacts.outputs.result[2] }}" 
+        run: echo "${{ steps.dd-contacts.outputs.result[0] }}" 
       # - name: Checking if its running correctly
       #   run: echo "${{ steps.dd-contacts-2.outputs.result }}" 
       - name: Checking if its running correctly
-        run: echo "${{ steps.dd-contacts-3.outputs.result[4] }}" 
+        run: echo "${{ steps.dd-contacts-3.outputs.result }}" 
 
       - name: Checking if its running correctly
-        run: echo "${{ steps.dd-links.outputs.result[5] }}"
+        run: echo "${{ steps.dd-links.outputs.result[0] }}"
 
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
