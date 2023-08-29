@@ -18,6 +18,7 @@ jobs:
         with:
           cmd: |
             yq '.dd-service' 'service.datadog.yaml'
+            yq '.team' 'service.datadog.yaml'
 
       - name: Check if it read the yaml file values
         run: echo "${{ steps.service-datadog-yaml.outputs.result }}"
@@ -26,7 +27,7 @@ jobs:
         run: echo '${{ steps.service-datadog-yaml.outputs.result.dd-service }}'
 
       - name: Checking if its running correctly 2
-        run: echo '${{ steps.service-datadog-yaml.outputs.result['team'] }}'
+        run: echo '${{ steps.service-datadog-yaml.outputs}}'
 
       - name: Checking if its running correctly 3
         run: echo "${{ steps.service-datadog-yaml.outputs.result.contacts }}"
