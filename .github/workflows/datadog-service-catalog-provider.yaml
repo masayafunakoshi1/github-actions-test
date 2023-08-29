@@ -24,10 +24,10 @@ jobs:
         run: echo "${{ steps.service-datadog-yaml.outputs.result }}"
       
       - name: Checking if its running correctly
-        run: echo '${{ steps.service-datadog-yaml.outputs.result.dd-service }}'
+        run: echo '${{ steps.service-datadog-yaml.outputs.result['team'] }}'
 
       - name: Checking if its running correctly 2
-        run: echo '${{ steps.service-datadog-yaml.outputs}}'
+        run: echo '${{ steps.service-datadog-yaml.outputs.team}}'
 
       - name: Checking if its running correctly 3
         run: echo "${{ steps.service-datadog-yaml.outputs.result.contacts }}"
