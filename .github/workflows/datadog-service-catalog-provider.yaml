@@ -43,10 +43,7 @@ jobs:
         uses: mikefarah/yq@master 
         with:
           cmd: yq '.contacts' 'service.datadog.yaml'   
-      # - id: dd-contacts-2
-      #   uses: mikefarah/yq@master 
-      #   with:
-      #     cmd: yq '.contacts.type' 'service.datadog.yaml'
+
       - id: dd-contacts-3
         uses: mikefarah/yq@master 
         with:
@@ -71,8 +68,8 @@ jobs:
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
       - name: Checking if its running correctly
-        run:
-          for i in ${{steps.dd-contact.outputs.result}}
+        run: |
+          for i in ${{steps.dd-contacts.outputs.result}}
           do
             echo "$i"
           done
