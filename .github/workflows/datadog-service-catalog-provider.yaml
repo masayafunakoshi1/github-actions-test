@@ -51,7 +51,7 @@ jobs:
           cmd: yq '.' 'service.datadog.yaml'
 
       - name: Check if dd-service output is working
-        run: echo "${{ steps.dd-service-data.outputs.result }} ${{ steps.dd-service-data.outputs }}"
+        run: echo "${{ steps.dd-service-data.outputs.result }} ${{ steps.dd-service-data.outputs.dd-service }}"
 
 
 
