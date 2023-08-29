@@ -42,11 +42,11 @@ jobs:
       - id: dd-contacts
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.contacts.type' 'service.datadog.yaml'   
-      - id: dd-contacts-2
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.contacts.type' 'service.datadog.yaml'
+          cmd: yq '.contacts' 'service.datadog.yaml'   
+      # - id: dd-contacts-2
+      #   uses: mikefarah/yq@master 
+      #   with:
+      #     cmd: yq '.contacts.type' 'service.datadog.yaml'
       - id: dd-contacts-3
         uses: mikefarah/yq@master 
         with:
@@ -76,8 +76,8 @@ jobs:
 
       - name: Checking if its running correctly
         run: echo "${{ steps.dd-contacts.outputs.result }}" 
-      - name: Checking if its running correctly
-        run: echo "${{ steps.dd-contacts-2.outputs.result }}" 
+      # - name: Checking if its running correctly
+      #   run: echo "${{ steps.dd-contacts-2.outputs.result }}" 
       - name: Checking if its running correctly
         run: echo "${{ steps.dd-contacts-3.outputs.result }}" 
       - name: Checking if its running correctly
