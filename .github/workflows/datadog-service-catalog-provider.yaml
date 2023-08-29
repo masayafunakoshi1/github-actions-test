@@ -72,7 +72,7 @@ jobs:
 
       - name: Checking if its running correctly
         run:
-          for i in "${arr[@]}"
+          for i in ${{steps.dd-contact.outputs.result}}
           do
             echo "$i"
           done
