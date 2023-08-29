@@ -11,47 +11,54 @@ jobs:
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v3
-    #  THIS WORKS BUT ISNT VERY COMPREHENSIVE
-      # - id: dd-service
-      #   name: Getting service data from service.datadog.yaml
-      #   uses: mikefarah/yq@master 
-      #   with:
-      #     cmd: yq '.dd-service' 'service.datadog.yaml'
-      # - id: dd-team
-      #   uses: mikefarah/yq@master 
-      #   with:
-      #     cmd: yq '.team' 'service.datadog.yaml'
-      # - id: dd-application
-      #   uses: mikefarah/yq@master 
-      #   with:
-      #     cmd: yq '.application' 'service.datadog.yaml'
-      # - id: dd-contacts
-      #   uses: mikefarah/yq@master 
-      #   with:
-      #     cmd: yq '.contacts' 'service.datadog.yaml'
-
-      # - name: Check if dd-service output is working
-      #   run: echo "${{ steps.dd-service.outputs.result }}"
-      
-      # - name: Checking if its running correctly
-      #   run: echo '${{ steps.dd-team.outputs.result }}'
-
-      # - name: Checking if its running correctly 2
-      #   run: echo '${{ steps.dd-application.outputs.result}}'
-
-      # - name: Checking if its running correctly 3
-      #   run: echo "${{ steps.dd-contacts.outputs.result }}"
-
-    
-  # HERE'S A MORE OPTIMIZED APPROACH
-      - name: Getting service data from service.datadog.yaml
-        id: dd-service-data
+        
+      - id: dd-service
+        name: Getting service data from service.datadog.yaml
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.' 'service.datadog.yaml'
+          cmd: yq '.dd-service' 'service.datadog.yaml'
+      - id: dd-team
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.team' 'service.datadog.yaml'
+      - id: dd-application
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.application' 'service.datadog.yaml'
+      - id: dd-description
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.description' 'service.datadog.yaml'
+      - id: dd-lifecycle
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.lifecycle' 'service.datadog.yaml'
+      - id: dd-tier
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.tier' 'service.datadog.yaml'
+
+          
+      - id: dd-contacts
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.contacts' 'service.datadog.yaml'   
+      - id: dd-links
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.links' 'service.datadog.yaml'           
 
       - name: Check if dd-service output is working
-        run: echo "${{ steps.dd-service-data.outputs.result[10] }} ${{ steps.dd-service-data.outputs.result['dd-service:'] }}"
+        run: echo "${{ steps.dd-service.outputs.result }}"
+      
+      - name: Checking if its running correctly
+        run: echo '${{ steps.dd-team.outputs.result }}'
+
+      - name: Checking if its running correctly 2
+        run: echo '${{ steps.dd-application.outputs.result}}'
+
+      - name: Checking if its running correctly 3
+        run: echo "${{ steps.dd-contacts.outputs.result }}"
 
 
 
