@@ -1,0 +1,50 @@
+name: datadog-service-catalog-provider
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v3
+
+      - name: Read service.datadog.yaml file in key-value pairs
+        id: service-datadog-yaml
+        uses: mikefarah/yq@master 
+        with:
+          cmd: |
+            yq '.' 'service.datadog.yaml'
+
+      - name: Check if it read the yaml file values
+        run: echo ${{ steps.service-datadog-yaml.outputs.result }}
+      
+      - name: Checking if its running correctly
+        run: echo ${{ steps.service-datadog-yaml.outputs.result.dd-service }}
+      # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
+      #   with:
+      #     schema-version: v2.1
+      #     datadog-hostname: api.us5.datadoghq.com
+      #     datadog-key: ${{ secrets.DATADOG_API_KEY }}
+      #     datadog-app-key: ${{ secrets.DATADOG_APP_KEY }}
+
+      #     service-name: ${{ steps.service-datadog-yaml.outputs.result.dd-service }}
+      #     team: ${{ steps.service-datadog-yaml.outputs.result.team }}
+      #     application: ${{ steps.service-datadog-yaml.outputs.result.application }}
+      #     description: ${{ steps.service-datadog-yaml.outputs.result.description }}
+      #     lifecycle: ${{ steps.service-datadog-yaml.outputs.result.lifecycle }}
+      #     tier: ${{ steps.service-datadog-yaml.outputs.result.tier }}
+      #     email: ${{ steps.service-datadog-yaml.outputs.result.contacts.email.contact }}
+      #     slack-support-channel: ${{ steps.service-datadog-yaml.outputs.result.contacts.slack.contact }}
+
+      #     links: |
+      #       ${{ steps.service-datadog-yaml.outputs.result.links }}
+            
+      #     integrations: |
+      #       ${{ steps.service-datadog-yaml.outputs.result.integrations }}
+          
+      #     contacts: |
+      #       ${{ steps.service-datadog-yaml.outputs.result.contacts }}
