@@ -11,26 +11,36 @@ jobs:
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v3
-
-      - name: Read service.datadog.yaml file in key-value pairs
-        id: service-datadog-yaml
+ 
+      - id: dd-service
+        name: Getting service data from service.datadog.yaml
         uses: mikefarah/yq@master 
         with:
-          cmd: |
-            yq '.dd-service' 'service.datadog.yaml'
-            yq '.team' 'service.datadog.yaml'
+          cmd: yq '.dd-service' 'service.datadog.yaml'
+      - id: dd-team
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.team' 'service.datadog.yaml'
+      - id: dd-application
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.application' 'service.datadog.yaml'
+      - id: dd-contacts
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.contacts' 'service.datadog.yaml'
 
-      - name: Check if it read the yaml file values
-        run: echo "${{ steps.service-datadog-yaml.outputs.result }}"
+      - name: Check if dd-service output is working
+        run: echo "${{ steps.dd-service.outputs.result }}"
       
       - name: Checking if its running correctly
-        run: echo '${{ steps.service-datadog-yaml.outputs.result['team'] }}'
+        run: echo '${{ steps.dd-team.outputs.result }}'
 
       - name: Checking if its running correctly 2
-        run: echo '${{ steps.service-datadog-yaml.outputs.team}}'
+        run: echo '${{ steps.dd-application.outputs.result}}'
 
       - name: Checking if its running correctly 3
-        run: echo "${{ steps.service-datadog-yaml.outputs.result.contacts }}"
+        run: echo "${{ steps.dd-contacts.outputs.result }}"
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
       #   with:
       #     schema-version: v2.1
