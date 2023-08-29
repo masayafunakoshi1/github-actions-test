@@ -68,7 +68,7 @@ jobs:
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
       - name: Checking if its running correctly
-        run: |
+        run: 
           for i in ${{steps.dd-contacts.outputs.result}}
           do
             echo "$i"
