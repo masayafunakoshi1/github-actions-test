@@ -24,6 +24,12 @@ jobs:
       
       - name: Checking if its running correctly
         run: echo ${{ steps.service-datadog-yaml.outputs.result['dd-service'] }}
+
+      - name: Checking if its running correctly 2
+        run: echo ${{ steps.service-datadog-yaml.outputs.result['team'] }}
+
+      - name: Checking if its running correctly 3
+        run: echo ${{ steps.service-datadog-yaml.outputs.result.contacts }}
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
       #   with:
       #     schema-version: v2.1
