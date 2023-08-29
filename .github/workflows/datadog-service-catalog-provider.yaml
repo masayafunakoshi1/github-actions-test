@@ -37,17 +37,20 @@ jobs:
         uses: mikefarah/yq@master 
         with:
           cmd: yq '.tier' 'service.datadog.yaml'
+      - id: dd-integrations
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'        
 
 
       - id: dd-contacts
         uses: mikefarah/yq@master 
         with:
           cmd: echo "::set-output name=contacts::$(cat service.datadog.yaml | yq -r '.contacts')"  
-
       - id: dd-contacts-3
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.contacts' 'service.datadog.yaml'   
+          cmd: yq '.contacts.[0]' 'service.datadog.yaml'   
 
       - id: dd-links
         uses: mikefarah/yq@master 
@@ -84,12 +87,13 @@ jobs:
       #     datadog-key: ${{ secrets.DATADOG_API_KEY }}
       #     datadog-app-key: ${{ secrets.DATADOG_APP_KEY }}
 
-      #     service-name: ${{ steps.service-datadog-yaml.outputs.result.dd-service }}
-      #     team: ${{ steps.service-datadog-yaml.outputs.result.team }}
-      #     application: ${{ steps.service-datadog-yaml.outputs.result.application }}
-      #     description: ${{ steps.service-datadog-yaml.outputs.result.description }}
-      #     lifecycle: ${{ steps.service-datadog-yaml.outputs.result.lifecycle }}
-      #     tier: ${{ steps.service-datadog-yaml.outputs.result.tier }}
+      #     service-name: ${{ steps.dd-service.outputs.result }}
+      #     team: ${{ steps.dd-team.outputs.result }}
+      #     application: ${{ steps.dd-application.outputs.result}}
+      #     description: ${{ steps.dd-description.outputs.result }}
+      #     lifecycle: ${{ steps.dd-lifecycle.outputs.result }}
+      #     tier: ${{ steps.dd-tier.outputs.result }}
+      
       #     email: ${{ steps.service-datadog-yaml.outputs.result.contacts.email.contact }}
       #     slack-support-channel: ${{ steps.service-datadog-yaml.outputs.result.contacts.slack.contact }}
 
@@ -97,7 +101,7 @@ jobs:
       #       ${{ steps.service-datadog-yaml.outputs.result.links }}
             
       #     integrations: |
-      #       ${{ steps.service-datadog-yaml.outputs.result.integrations }}
+      #       ${{ steps. }}
           
       #     contacts: |
       #       ${{ steps.service-datadog-yaml.outputs.result.contacts }}
