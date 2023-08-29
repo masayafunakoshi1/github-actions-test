@@ -17,13 +17,13 @@ jobs:
         uses: mikefarah/yq@master 
         with:
           cmd: |
-            yq '.' 'service.datadog.yaml'
+            yq '.dd-service' 'service.datadog.yaml'
 
       - name: Check if it read the yaml file values
         run: echo "${{ steps.service-datadog-yaml.outputs.result }}"
       
       - name: Checking if its running correctly
-        run: echo '${{ steps.service-datadog-yaml.outputs.result['dd-service'] }}'
+        run: echo '${{ steps.service-datadog-yaml.outputs.result.dd-service }}'
 
       - name: Checking if its running correctly 2
         run: echo '${{ steps.service-datadog-yaml.outputs.result['team'] }}'
