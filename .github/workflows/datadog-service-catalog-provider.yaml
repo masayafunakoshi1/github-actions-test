@@ -43,14 +43,15 @@ jobs:
           cmd: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'        
 
 
-      - id: dd-contacts
+      - id: dd-contacts-email
         uses: mikefarah/yq@master 
         with:
-          cmd: echo "::set-output name=contacts::$(cat service.datadog.yaml | yq -r '.contacts')"  
-      - id: dd-contacts-3
+          cmd: yq '.contacts.[1].contact' 'service.datadog.yaml'
+
+      - id: dd-contacts-slack
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.contacts.[0]' 'service.datadog.yaml'   
+          cmd: yq '.contacts.[0].contact' 'service.datadog.yaml'   
 
       - id: dd-links
         uses: mikefarah/yq@master 
@@ -71,10 +72,9 @@ jobs:
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
       - name: Checking if its running correctly
-        run: |
-          echo "${{ steps.dd-contacts.outputs.result }}" 
+        run: echo "${{ steps.dd-contacts-slack.outputs.result }}" 
       - name: Checking if its running correctly
-        run: echo "${{ steps.dd-contacts-3.outputs.result }}" 
+        run: echo "${{ steps.dd-contacts-email.outputs.result }}" 
 
       - name: Checking if its running correctly
         run: echo "${{ steps.dd-links.outputs.result[0] }}"
