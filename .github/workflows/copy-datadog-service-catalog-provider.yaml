@@ -46,8 +46,8 @@ jobs:
       - name: Set env variables for each service catalog 
         shell: bash
         run: |
-          data = ${{ steps.dd-overall-data.outputs.result }}
-          for line in data
+          DATA = ${{ steps.dd-overall-data.outputs.result }}
+          for line in $DATA
           do
             echo $line
           done
