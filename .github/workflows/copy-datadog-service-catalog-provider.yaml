@@ -46,13 +46,11 @@ jobs:
       - name: Set env variables for each service catalog 
         shell: bash
         run: |
-          for line in ${{ steps.dd-overall-data.outputs.result }}; 
+          data = ${{ steps.dd-overall-data.outputs.result }}
+          for line in data
           do
             echo $line
           done
-          
-      - name: Check if dd-service output is working
-        run: echo "${{ steps.dd-overall-data.outputs.result }}"
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
       #   name: Update datadog service catalog metadata with new metadata
