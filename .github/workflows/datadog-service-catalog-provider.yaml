@@ -24,7 +24,7 @@ jobs:
           echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while read -r item; do echo item; done)" >> $GITHUB_ENV
+          echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do echo "$line" ; done)" >> $GITHUB_ENV
           echo "dd-contacts-slack=$(yq '.contacts.[1].contact' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
           echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
