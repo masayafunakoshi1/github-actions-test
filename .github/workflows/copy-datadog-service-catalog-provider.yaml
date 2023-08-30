@@ -1,4 +1,4 @@
-name: datadog-service-catalog-provider
+name: copy-datadog-service-catalog-provider
 
 on:
   push:
@@ -42,6 +42,9 @@ jobs:
 
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-overall-data.outputs.result }}"
+      
+      - name: Check if dd-service output is working
+        run: echo "${{ steps.dd-overall-data.outputs.result['dd-service'] }}"
 
       # - name: Set env variables for each service catalog 
       #   shell: bash
