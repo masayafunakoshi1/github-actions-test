@@ -41,7 +41,7 @@ jobs:
           cmd: yq 'map_values(.)' 'service.datadog.yaml'   
 
       - name: Check if dd-service output is working
-        run: echo "${{ steps.dd-overall-data.outputs.result }}"
+        run: yq '.dd-service' 'service.datadog.yaml'
       
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-overall-data.outputs.result.dd-service }}"
