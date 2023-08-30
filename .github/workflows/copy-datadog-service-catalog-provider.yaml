@@ -38,19 +38,19 @@ jobs:
         name: Getting service data from service.datadog.yaml
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.' 'service.datadog.yaml'   
+          cmd: yq-n '.' 'service.datadog.yaml'   
 
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-overall-data.outputs.result }}"
 
-      - name: Set env variables for each service catalog 
-        shell: bash
-        run: |
-          for line in "${{ steps.dd-overall-data.outputs.result }}"
-          do
-            echo $line
-            echo "----"
-          done
+      # - name: Set env variables for each service catalog 
+      #   shell: bash
+      #   run: |
+      #     for line in "${{ steps.dd-overall-data.outputs.result }}"
+      #     do
+      #       echo $line
+      #       echo "----"
+      #     done
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
       #   name: Update datadog service catalog metadata with new metadata
