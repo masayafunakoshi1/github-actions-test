@@ -1,16 +1,18 @@
 schema-version: v2.1
 dd-service: pasithea
 team: sre
+application: pasithea
+description: Pasithea is a Flask web application. Its primary purpose is to suppress alerts based on "configurable metadata" about the alert's denoted service(s).
+lifecycle: ""
+tier: ""
+
 contacts:
   - type: slack
     contact: https://app.slack.com/client/
   - type: email
     contact: sre@mlb.com
-application: pasithea
-description: Pasithea is a Flask web application. Its primary purpose is to suppress alerts based on "configurable metadata" about the alert's denoted service(s).
-lifecycle: ""
-tier: ""
-links:
+
+links: 
   - name: o11y/pasithea
     url: <pasithea url>
     type: repo          
@@ -26,7 +28,10 @@ links:
   - name: pasithea operations
     url: <pasithea ops url>
     type: runbook
-tags: []
+
+tags:
+  - ""
+
 integrations:
  pagerduty:
-   service-url: https://mlb.pagerduty.com/service-directory/Prandomletters
+   service-url: https://mlb.pagerduty.com/service-directory/Prandomservice
