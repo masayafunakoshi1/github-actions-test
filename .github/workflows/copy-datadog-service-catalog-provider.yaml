@@ -48,7 +48,8 @@ jobs:
         run: |
           for line in "${{ steps.dd-overall-data.outputs.result }}"
           do
-            echo $line
+            echo $line ;
+            echo "----"
           done
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
