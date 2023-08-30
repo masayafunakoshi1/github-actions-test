@@ -6,6 +6,26 @@ on:
       - main
   workflow_dispatch:
 jobs:
+
+  check-if-service-datadog-yaml-file-changed:
+    runs-on: ubuntu-latest
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Check if service.datadog.yaml file is changed
+        id: changed-files
+        uses: tj-actions/changed-files@v38
+        with:
+          files: service.datadog.yaml
+      
+      - name: Cancel run if service.datadog.yaml file is unchanged 
+        if: steps.changed-files.outputs.any_changed != 'true'
+        shell: bash
+        run: while true; do echo "Waiting for job to be cancelled"; sleep 5; done
+        
   update-DD-service-catalog:
     runs-on: ubuntu-latest
     steps:
@@ -64,21 +84,21 @@ jobs:
       #     datadog-key: ${{ secrets.DATADOG_API_KEY }}
       #     datadog-app-key: ${{ secrets.DATADOG_APP_KEY }}
 
-      #     service-name: ${{ steps.dd-service.outputs.result }}
-      #     team: ${{ steps.dd-team.outputs.result }}
-      #     application: ${{ steps.dd-application.outputs.result}}
-      #     description: ${{ steps.dd-description.outputs.result }}
-      #     lifecycle: ${{ steps.dd-lifecycle.outputs.result }}
-      #     tier: ${{ steps.dd-tier.outputs.result }}
-      #     email: ${{ steps.dd-contacts-email.outputs.result }}
-      #     slack-support-channel: ${{ steps.dd-contacts-slack.outputs.result }}
+      #     service-name: ${{ env.dd-service  }}
+      #     team: ${{ env.dd-team }}
+      #     application: ${{ env.dd-application}}
+      #     description: ${{ env.dd-description  }}
+      #     lifecycle: ${{ env.dd-lifecycle }}
+      #     tier: ${{ env.dd-tier }}
+      #     email: ${{ env.dd-contacts-email }}
+      #     slack-support-channel: ${{ env.dd-contacts-slack }}
 
       #     contacts: |
-      #       ${{ steps.service-datadog-yaml.outputs.result.contacts }}
+      #       ${{ env.dd-contacts }}
 
       #     links: |
-      #       ${{ steps.dd-links.outputs.result }}
+      #       ${{ env.dd-links }}
             
       #     integrations: |
-      #       ${{ steps.dd-integrations.outputs.result }}
+      #       ${{ env.dd-integrations }}
           
