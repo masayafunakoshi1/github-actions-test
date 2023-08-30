@@ -18,7 +18,7 @@ jobs:
         with:
           cmd: yq '.dd-service' 'service.datadog.yaml'
         env:
-          dd-team: yq '.team' 'service.datadog.yaml'
+          NEWENV: yq '.team' 'service.datadog.yaml'
       - id: dd-team 
         run: yq '.team' 'service.datadog.yaml'
       - id: dd-application 
@@ -41,7 +41,7 @@ jobs:
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-service.outputs.result }}"
       - name: Check if dd-team output is working
-        run: echo '${{ env.dd-team }}'
+        run: echo '${{ env.NEWENV }}'
       - name: Check if dd-application output is working
         run: echo '${{ steps.dd-application.outputs.result}}'
       - name: Check if dd-description output is working
