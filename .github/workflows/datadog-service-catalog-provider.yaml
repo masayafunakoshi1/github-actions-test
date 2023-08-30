@@ -17,10 +17,12 @@ jobs:
         uses: mikefarah/yq@master 
         with:
           cmd: yq '.dd-service' 'service.datadog.yaml'
+        env:
+          dd-team: yq '.team' 'service.datadog.yaml'
       - id: dd-team 
         run: yq '.team' 'service.datadog.yaml'
       - id: dd-application 
-        run: yq '.application' 'service.datadog.yaml'
+        run: yq '.application' 'service.datadog.yaml' >> $GITHUB_OUTPUT
       - id: dd-description 
         run: yq '.description' 'service.datadog.yaml'
       - id: dd-lifecycle 
@@ -39,7 +41,7 @@ jobs:
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-service.outputs.result }}"
       - name: Check if dd-team output is working
-        run: echo '${{ steps.dd-team.outputs.result }}'
+        run: echo '${{ env.dd-team }}'
       - name: Check if dd-application output is working
         run: echo '${{ steps.dd-application.outputs.result}}'
       - name: Check if dd-description output is working
