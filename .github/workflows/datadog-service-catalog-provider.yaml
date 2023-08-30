@@ -27,7 +27,7 @@ jobs:
           echo "dd-contacts-email=$(yq '.contacts.[1].contact' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-contacts-slack=$(yq '.contacts.[0].contact' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
-          echo "dd-integrations-pagerduty=$(yq '.integrations.pagerduty.service-url' 'service.datadog.yaml')" >> $GITHUB_ENV          
+          echo "dd-integrations="$(yq '.integrations.pagerduty.service-url' 'service.datadog.yaml')"" >> $GITHUB_ENV          
 
       - name: Check if dd-service output is working
         run: echo "${{ env.dd-service }}"
