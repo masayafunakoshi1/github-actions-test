@@ -38,7 +38,7 @@ jobs:
         name: Getting service data from service.datadog.yaml
         uses: mikefarah/yq@master 
         with:
-          cmd: yq -j '.' 'service.datadog.yaml'   
+          cmd: yq 'keys' 'service.datadog.yaml'   
 
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-overall-data.outputs.result }}"
