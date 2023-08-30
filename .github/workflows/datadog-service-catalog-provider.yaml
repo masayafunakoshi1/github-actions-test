@@ -24,13 +24,12 @@ jobs:
           echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
           echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
           echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | awk -F ': ' '/contact/ { print $2 }')" >> $GITHUB_ENV
           echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
           echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml')"" >> $GITHUB_ENV
           echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
           echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
-
+# echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
       - name: Check if dd-service output is working
         run: echo "${{ env.dd-service }}"
       - name: Check if dd-team output is working
