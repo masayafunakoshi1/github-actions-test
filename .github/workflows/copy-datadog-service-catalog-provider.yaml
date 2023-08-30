@@ -46,8 +46,9 @@ jobs:
       - name: Set env variables for each service catalog 
         shell: bash
         run: |
-          for line in ${{ steps.dd-overall-data.outputs.result }}; do
-            echo "${line}"
+          for line in ${{ steps.dd-overall-data.outputs.result }}; 
+          do
+            echo $line
           done
           
       - name: Check if dd-service output is working
