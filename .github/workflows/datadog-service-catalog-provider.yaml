@@ -36,11 +36,7 @@ jobs:
       - id: dd-tier
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.tier' 'service.datadog.yaml'
-      - id: dd-integrations
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'        
+          cmd: yq '.tier' 'service.datadog.yaml'       
 
 
       - id: dd-contacts-email
@@ -56,28 +52,36 @@ jobs:
       - id: dd-links
         uses: mikefarah/yq@master 
         with:
-          cmd: yq '.links' 'service.datadog.yaml'           
+          cmd: yq '.links' 'service.datadog.yaml'
+
+      - id: dd-integrations
+        uses: mikefarah/yq@master 
+        with:
+          cmd: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'            
 
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-service.outputs.result }}"
-      - name: Checking if its running correctly
+      - name: Check if dd-team output is working
         run: echo '${{ steps.dd-team.outputs.result }}'
-      - name: Checking if its running correctly
+      - name: Check if dd-application output is working
         run: echo '${{ steps.dd-application.outputs.result}}'
-      - name: Checking if its running correctly
+      - name: Check if dd-description output is working
         run: echo "${{ steps.dd-description.outputs.result }}"
-      - name: Checking if its running correctly
+      - name: Check if dd-lifecycle output is working
         run: echo "${{ steps.dd-lifecycle.outputs.result }}"
-      - name: Checking if its running correctly
+      - name: Check if dd-tier output is working
         run: echo "${{ steps.dd-tier.outputs.result }}"
 
-      - name: Checking if its running correctly
+      - name: Check if dd-contacts-slack output is working
         run: echo "${{ steps.dd-contacts-slack.outputs.result }}" 
-      - name: Checking if its running correctly
+      - name: Check if dd-contacts-email is working
         run: echo "${{ steps.dd-contacts-email.outputs.result }}" 
 
-      - name: Checking if its running correctly
-        run: echo "${{ steps.dd-links.outputs.result[0] }}"
+      - name: Check if dd-links output is working
+        run: echo "${{ steps.dd-links.outputs.result }}"
+        
+      - name: Check if dd-integrations output is working
+        run: echo "${{ steps.dd-integrations.outputs.result }}"
 
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
@@ -93,12 +97,11 @@ jobs:
       #     description: ${{ steps.dd-description.outputs.result }}
       #     lifecycle: ${{ steps.dd-lifecycle.outputs.result }}
       #     tier: ${{ steps.dd-tier.outputs.result }}
-      
-      #     email: ${{ steps.service-datadog-yaml.outputs.result.contacts.email.contact }}
-      #     slack-support-channel: ${{ steps.service-datadog-yaml.outputs.result.contacts.slack.contact }}
+      #     email: ${{ steps.dd-contacts-email.outputs.result }}
+      #     slack-support-channel: ${{ steps.dd-contacts-slack.outputs.result }}
 
       #     links: |
-      #       ${{ steps.service-datadog-yaml.outputs.result.links }}
+      #       ${{ steps.dd-links.outputs.result }}
             
       #     integrations: |
       #       ${{ steps. }}
