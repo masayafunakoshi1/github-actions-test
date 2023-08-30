@@ -17,42 +17,24 @@ jobs:
         uses: mikefarah/yq@master 
         with:
           cmd: yq '.dd-service' 'service.datadog.yaml'
-      - id: dd-team
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.team' 'service.datadog.yaml'
-      - id: dd-application
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.application' 'service.datadog.yaml'
-      - id: dd-description
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.description' 'service.datadog.yaml'
-      - id: dd-lifecycle
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.lifecycle' 'service.datadog.yaml'
-      - id: dd-tier
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.tier' 'service.datadog.yaml'       
-      - id: dd-contacts-email
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.contacts.[1].contact' 'service.datadog.yaml'
-      - id: dd-contacts-slack
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.contacts.[0].contact' 'service.datadog.yaml'   
-      - id: dd-links
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.links' 'service.datadog.yaml'
-      - id: dd-integrations
-        uses: mikefarah/yq@master 
-        with:
-          cmd: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'            
+      - id: dd-team 
+        run: yq '.team' 'service.datadog.yaml'
+      - id: dd-application 
+        run: yq '.application' 'service.datadog.yaml'
+      - id: dd-description 
+        run: yq '.description' 'service.datadog.yaml'
+      - id: dd-lifecycle 
+        run: yq '.lifecycle' 'service.datadog.yaml'
+      - id: dd-tier 
+        run: yq '.tier' 'service.datadog.yaml'       
+      - id: dd-contacts-email 
+        run: yq '.contacts.[1].contact' 'service.datadog.yaml'
+      - id: dd-contacts-slack 
+        run: yq '.contacts.[0].contact' 'service.datadog.yaml'   
+      - id: dd-links 
+        run: yq '.links' 'service.datadog.yaml'
+      - id: dd-integrations 
+        run: yq '.integrations.pagerduty.service-url' 'service.datadog.yaml'            
 
       - name: Check if dd-service output is working
         run: echo "${{ steps.dd-service.outputs.result }}"
