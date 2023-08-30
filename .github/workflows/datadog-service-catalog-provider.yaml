@@ -22,7 +22,7 @@ jobs:
       - id: dd-team 
         run: yq '.team' 'service.datadog.yaml'
       - id: dd-application 
-        run: echo "dd-application=${yq '.application' 'service.datadog.yaml'}" >> $GITHUB_OUTPUT
+        run: yq '.application' 'service.datadog.yaml'
       - id: dd-description 
         run: yq '.description' 'service.datadog.yaml'
       - id: dd-lifecycle 
