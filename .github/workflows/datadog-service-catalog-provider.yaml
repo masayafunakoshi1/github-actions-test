@@ -47,7 +47,7 @@ jobs:
             echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             
             EOF="$(openssl rand -hex 8)"
-            dd-contacts="$(yq '.contacts' 'service.datadog.yaml')"
+            dd-contacts=$(yq '.contacts' 'service.datadog.yaml')
             echo "dd-contacts-response<<EOF"$'\n'"$dd-contacts"$'\n'EOF >> $GITHUB_ENV
 
             echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
