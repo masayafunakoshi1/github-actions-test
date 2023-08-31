@@ -46,7 +46,7 @@ jobs:
             echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
 
-            dd_contacts="$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do echo "${line}\n"; done)" 
+            dd_contacts="$(yq '.contacts' 'service.datadog.yaml')" 
             dd_contacts="${dd_contacts//'%'/'%25'}"
             dd_contacts="${dd_contacts//$'\n'/'%0A'}"
             dd_contacts="${dd_contacts//$'\r'/'%0D'}"
