@@ -29,6 +29,17 @@ links:
     url: <pasithea ops url>
     type: runbook
 
+# links: [
+#   {name: o11y/pasithea, url: https://github.mlbam.net/o11y/pasithea, type: repo },
+#   {name: pasithea docs, url: https://baseball.atlassian.net/wiki/spaces/SRE/pages/3068657685/Pasithea, type: doc},
+#   {name: pasithea api docs, url: https://github.mlbam.net/o11y/pasithea/blob/main/docs/API.md, type: doc},
+#   {name: pasithea argoCD, url: https://argocd.shared.mlbinfra.net/applications?showFavorites=false&proj=&sync=&autoSync=&health=&namespace=pasithea&cluster=&labels=, type: other },
+#   {name: pasithea operations, url: https://baseball.atlassian.net/wiki/spaces/SRE/pages/3069739107/Pasithea+Operations, type: runbook },
+# ]
+
+# tags: ["service: pasithea", "team: sre", "org: mlb"]
+
+
 tags:
   - ""
 
