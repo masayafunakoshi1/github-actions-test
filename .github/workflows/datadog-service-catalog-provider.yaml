@@ -7,24 +7,23 @@ on:
   workflow_dispatch:
 jobs:
 
-  check-if-service-datadog-yaml-file-changed:
-    runs-on: ubuntu-latest
-    name: Test changed-files
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+  # check-if-service-datadog-yaml-file-changed:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
       
-      - name: Check if service.datadog.yaml file is changed
-        id: changed-files
-        uses: tj-actions/changed-files@v38
-        with:
-          files: service.datadog.yaml
+  #     - name: Check if service.datadog.yaml file is changed
+  #       id: changed-files
+  #       uses: tj-actions/changed-files@v38
+  #       with:
+  #         files: service.datadog.yaml
       
-      - name: Cancel run if service.datadog.yaml file is unchanged 
-        if: steps.changed-files.outputs.any_changed != 'true'
-        shell: bash
-        run: while true; do echo "Waiting for job to be cancelled"; sleep 5; done
+  #     - name: Cancel run if service.datadog.yaml file is unchanged 
+  #       if: steps.changed-files.outputs.any_changed != 'true'
+  #       shell: bash
+  #       run: while true; do echo "Waiting for job to be cancelled"; sleep 5; done
         
   update-DD-service-catalog:
     runs-on: ubuntu-latest
@@ -32,23 +31,25 @@ jobs:
       - name: Checkout current repo
         uses: actions/checkout@v3
         
-      - name: Get yq github action to read service.datadog.yaml
+      - name: Update/create service data env variables
         uses: mikefarah/yq@master 
-      - name: Set service data env variables
-        run: |
-          echo "dd-service=$(yq '.dd-service' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
-          echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
-          echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
-          echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml')"" >> $GITHUB_ENV
-          echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
-          echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
+        with: 
+          cmd: |
+            echo "dd-service=$(yq '.dd-service' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml')"" >> $GITHUB_ENV
+            echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
+            echo "dd-tags="$(yq '.tags' 'service.datadog.yaml')"" >> $GITHUB_ENV
+            echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
+
 
       - name: Check if dd-service output is working
         run: echo "${{ env.dd-service }}"
@@ -72,6 +73,8 @@ jobs:
 
       - name: Check if dd-links output is working
         run: echo "${{ env.dd-links}}"
+      - name: Check if dd-tags output is working
+        run: echo "${{ env.dd-tags }}"
         
       - name: Check if dd-integrations output is working
         run: echo "${{ env.dd-integrations }}"

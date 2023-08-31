@@ -1,0 +1,59 @@
+name: datadog-service-catalog-provider
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+jobs:   
+  update-DD-service-catalog:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v3
+        
+      - name: Get yq github action to read service.datadog.yaml
+        uses: mikefarah/yq@master 
+
+      - name: Update/create service data env variables
+        run: |
+          echo "dd-service=$(yq '.dd-service' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
+          echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+          echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+          echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml')"" >> $GITHUB_ENV
+          echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
+          echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
+
+      - name: Push service data into us5/datadog service catalog metadata
+        uses: arcxp/datadog-service-catalog-metadata-provider@v2
+        with:
+          schema-version: v2.1
+          datadog-hostname: api.us5.datadoghq.com
+          datadog-key: ${{ secrets.DATADOG_API_KEY }}
+          datadog-app-key: ${{ secrets.DATADOG_APP_KEY }}
+
+          service-name: ${{ env.dd-service }}
+          team: ${{ env.dd-team }}
+          application: ${{ env.dd-application }}
+          description: ${{ env.dd-description }}
+          lifecycle: ${{ env.dd-lifecycle }}
+          tier: ${{ env.dd-tier }}
+
+          email: ${{ env.dd-contacts-email }}
+          slack-support-channel: ${{ env.dd-contacts-slack }}
+          contacts: |
+            ${{ env.dd-contacts }}
+
+          links: |
+            ${{ env.dd-links }}
+
+          integrations: |
+            ${{ env.dd-integrations }}
+          
