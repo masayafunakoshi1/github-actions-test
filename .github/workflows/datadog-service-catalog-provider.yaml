@@ -48,9 +48,9 @@ jobs:
             echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             
             delimiter="$(openssl rand -hex 8)"
-            echo "dd-contacts-response<<${delimiter}" >> "${GITHUB_OUTPUT}"
-            echo "${dd-contacts}" >> "${GITHUB_OUTPUT}"
-            echo "${delimiter}" >> "${GITHUB_OUTPUT}"
+            echo "dd-contacts-response<<${delimiter}" >> "${GITHUB_ENV}"
+            echo "${dd-contacts}" >> "${GITHUB_ENV}"
+            echo "${delimiter}" >> "${GITHUB_ENV}"
 
             echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
             echo "dd-tags="$(yq '.tags' 'service.datadog.yaml')"" >> $GITHUB_ENV
@@ -76,9 +76,7 @@ jobs:
         run: echo "${{ env.dd-contacts-email }}" 
 
       - name: Check if dd-contacts is working
-        run: echo "${{ steps.test.outputs.*}}"
-      - name: Check if dd-contacts is working
-        run: echo "${{ steps.test.outputs.dd-contacts-response }}"
+        run: echo "${{ env.dd-contacts-response }}"
 
       - name: Check if dd-links output is working
         run: echo "${{ env.dd-links }}"
