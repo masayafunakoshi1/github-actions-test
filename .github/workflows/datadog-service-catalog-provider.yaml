@@ -51,7 +51,7 @@ jobs:
 
             echo "dd-links="$(yq '.links' 'service.datadog.yaml' | while IFS= read -r line; do echo "\n$line"; done)"" >> $GITHUB_ENV
             
-            dd_links="$(cat << EOF $(yq '.links' 'service.datadog.yaml') EOF)" 
+            dd_links="$(yq '.links' 'service.datadog.yaml')" 
             dd_links="${dd_links/'%'/'%25'}"
             dd_links="${dd_links/$'\n'/'%0A'}"
             dd_links="${dd_links/$'\r'/'%0D'}"
