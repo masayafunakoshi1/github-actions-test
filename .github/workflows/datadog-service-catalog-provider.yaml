@@ -55,7 +55,7 @@ jobs:
             dd_links="${dd_links/'%'/'%25'}"
             dd_links="${dd_links/$'\n'/'%0A'}"
             dd_links="${dd_links/$'\r'/'%0D'}"
-            echo "dd-links=${dd_links}" >> $GITHUB_ENV
+            echo "dd-links="${dd_links}"" >> $GITHUB_ENV
 
             echo "dd-tags="$(yq '.tags' 'service.datadog.yaml')"" >> $GITHUB_ENV
             echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
