@@ -36,59 +36,66 @@ jobs:
         id: test
         with: 
           cmd: |
-            echo "dd-service=$(yq '.dd-service' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
-            echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd_service=$(yq '.dd_service' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd_contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             
-            dd_contacts_var=$(yq '.contacts' 'service.datadog.yaml')
-            echo "dd-contacts<<EOF" >> $GITHUB_ENV
-            echo "$dd_contacts_var" >> $GITHUB_ENV
+            dd_contacts_string=$(yq '.contacts' 'service.datadog.yaml')
+            echo "dd_contacts<<EOF" >> $GITHUB_ENV
+            echo "$dd_contacts_string" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
             
-            dd_links_var=$(yq '.links' 'service.datadog.yaml')
-            echo "dd-links<<EOF" >> $GITHUB_ENV
-            echo "$dd_links_var" >> $GITHUB_ENV
+            dd_links_string=$(yq '.links' 'service.datadog.yaml')
+            echo "dd_links<<EOF" >> $GITHUB_ENV
+            echo "$dd_links_string" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
 
-            echo "dd-tags="$(yq '.tags' 'service.datadog.yaml')"" >> $GITHUB_ENV
-            echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
+            dd_tags_string=$(yq '.tags' 'service.datadog.yaml')
+            echo "dd_tags<<EOF" >> $GITHUB_ENV
+            echo "$dd_tags_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            dd_integrations_string=$(yq '.integrations' 'service.datadog.yaml')
+            echo "dd_integrations<<EOF" >> $GITHUB_ENV
+            echo "$dd_integrations_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
 
 
-      - name: Check if dd-service output is working
-        run: echo "${{ env.dd-service }}"
-      - name: Check if dd-team output is working
-        run: echo '${{ env.dd-team }}'
-      - name: Check if dd-application output is working
-        run: echo '${{ env.dd-application }}'
-      - name: Check if dd-description output is working
-        run: echo "${{ env.dd-description }}"
-      - name: Check if dd-lifecycle output is working
-        run: echo "${{ env.dd-lifecycle }}"
-      - name: Check if dd-tier output is working
-        run: echo "${{ env.dd-tier }}"
+      - name: Check if dd_service output is working
+        run: echo "${{ env.dd_service }}"
+      - name: Check if dd_team output is working
+        run: echo '${{ env.dd_team }}'
+      - name: Check if dd_application output is working
+        run: echo '${{ env.dd_application }}'
+      - name: Check if dd_description output is working
+        run: echo "${{ env.dd_description }}"
+      - name: Check if dd_lifecycle output is working
+        run: echo "${{ env.dd_lifecycle }}"
+      - name: Check if dd_tier output is working
+        run: echo "${{ env.dd_tier }}"
 
-      - name: Check if dd-contacts-slack output is working
-        run: echo "${{ env.dd-contacts-slack }}" 
-      - name: Check if dd-contacts-email is working
-        run: echo "${{ env.dd-contacts-email }}" 
+      - name: Check if dd_contacts-slack output is working
+        run: echo "${{ env.dd_contacts-slack }}" 
+      - name: Check if dd_contacts-email is working
+        run: echo "${{ env.dd_contacts-email }}" 
 
-      - name: Check if dd-contacts is working
-        run: echo "${{ env.dd-contacts }}"
+      - name: Check if dd_contacts is working
+        run: echo "${{ env.dd_contacts }}"
 
-      - name: Check if dd-links output is working
-        run: echo "${{ env.dd-links }}"
-      - name: Check if dd-tags output is working
-        run: echo "${{ env.dd-tags }}"
+      - name: Check if dd_links output is working
+        run: echo "${{ env.dd_links }}"
+      - name: Check if dd_tags output is working
+        run: echo "${{ env.dd_tags }}"
         
-      - name: Check if dd-integrations output is working
-        run: echo "${{ env.dd-integrations }}"
+      - name: Check if dd_integrations output is working
+        run: echo "${{ env.dd_integrations }}"
 
 
       # - uses: arcxp/datadog-service-catalog-metadata-provider@v2
@@ -98,21 +105,21 @@ jobs:
       #     datadog-key: ${{ secrets.DATADOG_API_KEY }}
       #     datadog-app-key: ${{ secrets.DATADOG_APP_KEY }}
 
-      #     service-name: ${{ env.dd-service  }}
-      #     team: ${{ env.dd-team }}
-      #     application: ${{ env.dd-application}}
-      #     description: ${{ env.dd-description  }}
-      #     lifecycle: ${{ env.dd-lifecycle }}
-      #     tier: ${{ env.dd-tier }}
-      #     email: ${{ env.dd-contacts-email }}
-      #     slack-support-channel: ${{ env.dd-contacts-slack }}
+      #     service-name: ${{ env.dd_service  }}
+      #     team: ${{ env.dd_team }}
+      #     application: ${{ env.dd_application}}
+      #     description: ${{ env.dd_description  }}
+      #     lifecycle: ${{ env.dd_lifecycle }}
+      #     tier: ${{ env.dd_tier }}
+      #     email: ${{ env.dd_contacts-email }}
+      #     slack-support-channel: ${{ env.dd_contacts-slack }}
 
       #     contacts: |
-      #       ${{ env.dd-contacts }}
+      #       ${{ env.dd_contacts }}
 
       #     links: |
-      #       ${{ env.dd-links }}
+      #       ${{ env.dd_links }}
             
       #     integrations: |
-      #       ${{ env.dd-integrations }}
+      #       ${{ env.dd_integrations }}
           
