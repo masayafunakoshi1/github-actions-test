@@ -47,9 +47,16 @@ jobs:
             echo "dd-contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             echo "dd-contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             
-            echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do echo "/n$line"; done)"" >> $GITHUB_ENV
+            echo "dd-contacts="$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do echo "\n$line"; done)"" >> $GITHUB_ENV
 
-            echo "dd-links="$(yq '.links' 'service.datadog.yaml')"" >> $GITHUB_ENV
+            echo "dd-links="$(yq '.links' 'service.datadog.yaml' | while IFS= read -r line; do echo "\n$line"; done)"" >> $GITHUB_ENV
+            
+            dd_links="$(cat << EOF $(yq '.links 'service.datadog.yaml') EOF)" 
+            dd_links="${dd_links/'%'/'%25'}"
+            dd_links="${dd_links/$'\n'/'%0A'}"
+            dd_links="${dd_links/$'\r'/'%0D'}"
+            echo "dd-links=${dd_links}" >> $GITHUB_ENV
+
             echo "dd-tags="$(yq '.tags' 'service.datadog.yaml')"" >> $GITHUB_ENV
             echo "dd-integrations="$(yq '.integrations' 'service.datadog.yaml')"" >> $GITHUB_ENV          
 
