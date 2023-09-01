@@ -7,26 +7,26 @@ on:
   workflow_dispatch:
 jobs:
 
-  # check-if-service-datadog-yaml-file-changed:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-      
-  #     - name: Check if service.datadog.yaml file is changed
-  #       id: changed-files
-  #       uses: tj-actions/changed-files@v38
-  #       with:
-  #         files: service.datadog.yaml
-      
-  #     - name: Cancel run if service.datadog.yaml file is unchanged 
-  #       if: steps.changed-files.outputs.any_changed != 'true'
-  #       shell: bash
-  #       run: while true; do echo "Waiting for job to be cancelled"; sleep 5; done
-        
-  update-DD-service-catalog:
+  check_if_service_datadog_yaml_file_changed:
     runs-on: ubuntu-latest
+    outputs:
+      file_changed: ${{ steps.service_datadog_yaml_changed.outputs.any_changed }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Check if service.datadog.yaml file is changed
+        id: service_datadog_yaml_changed
+        uses: tj-actions/changed-files@v38
+        with:
+          files: service.datadog.yaml
+        
+
+  update_DD_service_catalog:
+    runs-on: ubuntu-latest
+    needs: [ check_if_service_datadog_yaml_file_changed ]
+    if: needs.check_if_service_datadog_yaml_file_changed.outputs.file_changed == 'True'
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v3
@@ -44,8 +44,8 @@ jobs:
             echo "dd_description=$(yq '.description' 'service.datadog.yaml')" >> $GITHUB_ENV
             echo "dd_lifecycle=$(yq '.lifecycle' 'service.datadog.yaml')" >> $GITHUB_ENV
             echo "dd_tier=$(yq '.tier' 'service.datadog.yaml')" >> $GITHUB_ENV
-            echo "dd_contacts-email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
-            echo "dd_contacts-slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd_contacts_email=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "contact: .*@.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
+            echo "dd_contacts_slack=$(yq '.contacts' 'service.datadog.yaml' | while IFS= read -r line; do if echo "$line" | grep -q "https://app.slack.com/.*"; then echo "$line" | awk '{print $2}'; break; fi; done)" >> $GITHUB_ENV
             
             dd_contacts_string=$(yq '.contacts' 'service.datadog.yaml')
             echo "dd_contacts<<EOF" >> $GITHUB_ENV
@@ -111,8 +111,8 @@ jobs:
       #     description: ${{ env.dd_description  }}
       #     lifecycle: ${{ env.dd_lifecycle }}
       #     tier: ${{ env.dd_tier }}
-      #     email: ${{ env.dd_contacts-email }}
-      #     slack-support-channel: ${{ env.dd_contacts-slack }}
+      #     email: ${{ env.dd_contacts_email }}
+      #     slack-support-channel: ${{ env.dd_contacts_slack }}
 
       #     contacts: |
       #       ${{ env.dd_contacts }}
