@@ -36,7 +36,7 @@ jobs:
         id: test
         with: 
           cmd: |
-            echo "dd_service=$(yq '.dd_service' 'service.datadog.yaml')" >> $GITHUB_ENV
+            echo "dd_service=$(yq '.dd-service' 'service.datadog.yaml')" >> $GITHUB_ENV
             echo "dd_team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
             echo "dd_application=$(yq '.application' 'service.datadog.yaml')" >> $GITHUB_ENV
             echo "dd_team=$(yq '.team' 'service.datadog.yaml')" >> $GITHUB_ENV
