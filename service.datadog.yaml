@@ -11,8 +11,6 @@ contacts:
     contact: https://app.slack.com/client/
   - type: email
     contact: sre@mlb.com
-  - type: microsoft-teams
-    contact: https://microsoft.teams.dummy.com/
 
 links: 
   - name: o11y/pasithea
