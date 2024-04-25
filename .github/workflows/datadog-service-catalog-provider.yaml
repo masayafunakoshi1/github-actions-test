@@ -62,7 +62,7 @@ jobs:
         with:
           cmd: |
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
-            ls | grep "tmp_file*" 
+            ls 
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
