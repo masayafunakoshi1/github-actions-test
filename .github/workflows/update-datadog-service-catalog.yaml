@@ -23,7 +23,7 @@ jobs:
           ## ADD AN IF STATEMENT TO LOOK FOR ---
           cmd: |
             #if there's multiple files in one file ("---"), split them into separate files
-            yq -s '"file_" + $index' ${{ inputs.matrix_path }}
+            echo "$(yq -s '"file_" + $index' ${{ inputs.matrix_path }})"
 
             echo "dd_service=$(yq '.dd-service' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
             echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
