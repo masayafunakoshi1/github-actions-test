@@ -46,7 +46,7 @@ jobs:
           echo "$outputVal"
           echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
-  #if there's multiple files in one file (with ---), split them into separate files, then add them into the inputs.matrix_path
+  #if there's multiple files in one file with "---"", split them into separate files, then add them into the inputs.matrix_path
   look_for_multiple_files_in_single_yaml_and_separate:
     if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
     needs: check_for_service_datadog_yaml_files_changed
@@ -56,20 +56,29 @@ jobs:
       matrix:
         file_paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
     runs-on: ubuntu-latest
+    outputs:
+      list_of_service_datadog_files: ${{ steps.parsed_and_updated_service_files.outputs.filepaths }}
     steps:
       - name: Checkout current repo
+        id: parsed_and_updated_service_files
         uses: actions/checkout@v4.1.1
 
       - name: Parse if multiple files in one yaml file
         uses: mikefarah/yq@master
         with:
+          #loop through matrix yaml files and create new files, splitting all the yaml's with "---"
           cmd: |
             echo "${{ matrix.file_paths }}"
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
-            ls | grep "tmp_file_" | while read -r line; do
-            echo "Processing $line"
 
+            outputVal="["
+
+            ls | grep "tmp_file_" | while read -r new_filepath; do
+              outputVal+="\"./$new_filepath\""
             done
+
+            outputVal+="]"
+            echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
