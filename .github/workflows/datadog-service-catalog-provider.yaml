@@ -61,8 +61,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
             cmd: |
-              echo "${{ matrix }}"
- 
+              echo "${{ matrix.file_paths }}"
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
@@ -71,7 +70,6 @@ jobs:
   #     #Get list of service.datadog.yaml files from output in job above.
   #     matrix:
   #       paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
-  #   runs-on: ubuntu-latest
   #   uses: ./.github/workflows/update-datadog-service-catalog.yaml
   #   secrets: inherit
   #   with:
