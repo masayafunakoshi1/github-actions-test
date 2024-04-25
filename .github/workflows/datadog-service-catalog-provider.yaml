@@ -61,8 +61,9 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
+            echo "${{ matrix.file_paths }}"
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
-            ls 
+            ls
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
