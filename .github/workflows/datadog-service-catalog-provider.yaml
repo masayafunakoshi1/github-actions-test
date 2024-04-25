@@ -74,13 +74,13 @@ jobs:
             outputVal="["
 
             ls | grep "tmp_file_" | while read -r new_filepath; do
-              outputVal+="\"./$new_filepath\""
-              echo "$outputVal"
+              outputVal+="./$new_filepath"
             done
 
             outputVal+="]"
-            # echo "edited_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
-            # echo "$outputVal"
+
+            echo "edited_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
+            echo "$outputVal"
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
