@@ -24,7 +24,7 @@ jobs:
           cmd: |
             #if there's multiple files in one file ("---"), split them into separate files
             STR="$(yq -s '"file_" + $index' ${{ inputs.matrix_path }})"
-            cat STR
+            echo "$STR"
 
             echo "dd_service=$(yq '.dd-service' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
             echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
