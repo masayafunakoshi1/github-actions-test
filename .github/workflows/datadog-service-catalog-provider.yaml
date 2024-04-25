@@ -61,10 +61,11 @@ jobs:
         uses: mikefarah/yq@master
         with:
             cmd: |
-              yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
-              ls | grep "tmp_file_" | while read -r line; do
-                echo "Processing $line"
-              done
+              echo "${{ matrix.file_paths }}"
+              # yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
+              # ls | grep "tmp_file_" | while read -r line; do
+              #   echo "Processing $line"
+              # done
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
