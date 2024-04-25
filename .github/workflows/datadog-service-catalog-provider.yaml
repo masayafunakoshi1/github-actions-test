@@ -74,13 +74,15 @@ jobs:
             new_output_val="["
             i=0
             ls | grep "tmp_file_" | while read -r new_filepath; do
-              if [[ $i -eq 0 ]]; then
-                new_output_val+="\"./$new_filepath\""
-              else
-                new_output_val+=", \"./$new_filepath\""
-              fi
-              i=$(( i + 1 ))
-            done
+                if [[ $new_filepath == "tmp_file_"* ]]; then
+                  if [[ $i -eq 0 ]]; then
+                    new_output_val+="\"./$new_filepath\""
+                  else
+                    new_output_val+=", \"./$new_filepath\""
+                  fi
+                  i=$(( i + 1 ))
+                fi
+              done
 
             new_output_val+="]"
 
