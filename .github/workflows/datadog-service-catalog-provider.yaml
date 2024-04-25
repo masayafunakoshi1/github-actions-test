@@ -57,6 +57,9 @@ jobs:
         file_paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4.1.1
+
       - name: Parse if multiple files in one yaml file
         uses: mikefarah/yq@master
         with:
