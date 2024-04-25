@@ -14,18 +14,23 @@ jobs:
       - name: Checkout current repo
         uses: actions/checkout@v4.1.1
 
+      - name: If multiple files in one file (--- seperator), add to matrix_path loop.
+        uses: mikefarah/yq@master
+        with:
+            #if there's multiple files in one file (split with ---), split them into separate files, then add them into the inputs.matrix_path
+            cmd: |
+              yq -s '"tmp_file_" + $index' ${{ inputs.matrix_path }}
+              ls | grep "tmp_file_" | while read -r line; do
+                echo "Processing $line"
+
+              done
+
       - name: Update/create service data env variables
         uses: mikefarah/yq@master 
         with: 
           # Uses yq to read yaml file and parse specific values into env variables
             # Bigger cmd blocks are for keeping formatting of multi-line strings
-
-          ## ADD AN IF STATEMENT TO LOOK FOR ---
           cmd: |
-            #if there's multiple files in one file ("---"), split them into separate files
-            yq -s '"file_" + $index' ${{ inputs.matrix_path }}
-            ls
-
             echo "dd_service=$(yq '.dd-service' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
             echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
             echo "dd_application=$(yq '.application' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
