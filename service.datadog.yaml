@@ -39,7 +39,6 @@ links:
 
 # tags: ["service: pasithea", "team: sre", "org: mlb"]
 
-
 tags:
   - "service: pasithea"
   - "team: sre"
@@ -48,3 +47,22 @@ tags:
 integrations:
  pagerduty:
    service-url: https://mlb.pagerduty.com/service-directory/Prandomservice
+
+---
+
+schema-version: v2.2
+dd-service: test
+team: ""
+application: test
+description: testing
+lifecycle: ""
+tier: ""
+type: "custom"
+
+links:
+  - name: ""
+    url: "example.com"
+    type: ""
+
+tags:
+  - "service: test"
