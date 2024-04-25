@@ -14,17 +14,6 @@ jobs:
       - name: Checkout current repo
         uses: actions/checkout@v4.1.1
 
-      - name: If multiple files in one file (--- seperator), add to matrix_path loop.
-        uses: mikefarah/yq@master
-        with:
-            #if there's multiple files in one file (split with ---), split them into separate files, then add them into the inputs.matrix_path
-            cmd: |
-              yq -s '"tmp_file_" + $index' ${{ inputs.matrix_path }}
-              ls | grep "tmp_file_" | while read -r line; do
-                echo "Processing $line"
-
-              done
-
       - name: Update/create service data env variables
         uses: mikefarah/yq@master 
         with: 
