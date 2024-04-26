@@ -8,58 +8,75 @@ on:
         type: string
 
 jobs:
-  update_datadog_service_catalog:
+
+  split_multi_yaml_files:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v4.1.1
 
-      - name: Update/create service data env variables
-        uses: mikefarah/yq@master 
-        with: 
-          # Uses yq to read yaml file and parse specific values into env variables
-            # Bigger cmd blocks are for keeping formatting of multi-line strings
+      - name: Split multi-YAML files
+        uses: mikefarah/yq@master
+        with:
           cmd: |
-            echo "dd_service=$(yq '.dd-service' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_application=$(yq '.application' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_description=$(yq '.description' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_lifecycle=$(yq '.lifecycle' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
-            echo "dd_tier=$(yq '.tier' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+            ls
+            for file in ${{ inputs.matrix_path }}; do
+              yq -s '"file_" + $index' $file
+            done
+            ls
 
-            dd_contacts_string=$(yq '.contacts' "${{ inputs.matrix_path }}")
-            echo "dd_contacts<<EOF" >> $GITHUB_ENV
-            echo "$dd_contacts_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  # update_datadog_service_catalog:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout current repo
+  #       uses: actions/checkout@v4.1.1
+
+  #     - name: Update/create service data env variables
+  #       uses: mikefarah/yq@master 
+  #       with: 
+  #         # Uses yq to read yaml file and parse specific values into env variables
+  #           # Bigger cmd blocks are for keeping formatting of multi-line strings
+  #         cmd: |
+  #           echo "dd_service=$(yq '.dd-service' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_application=$(yq '.application' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_team=$(yq '.team' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_description=$(yq '.description' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_lifecycle=$(yq '.lifecycle' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           echo "dd_tier=$(yq '.tier' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+
+  #           dd_contacts_string=$(yq '.contacts' "${{ inputs.matrix_path }}")
+  #           echo "dd_contacts<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_contacts_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
             
-            dd_links_string=$(yq '.links' "${{ inputs.matrix_path }}")
-            echo "dd_links<<EOF" >> $GITHUB_ENV
-            echo "$dd_links_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  #           dd_links_string=$(yq '.links' "${{ inputs.matrix_path }}")
+  #           echo "dd_links<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_links_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
 
-            dd_tags_string=$(yq '.tags' "${{ inputs.matrix_path }}")
-            echo "dd_tags<<EOF" >> $GITHUB_ENV
-            echo "$dd_tags_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  #           dd_tags_string=$(yq '.tags' "${{ inputs.matrix_path }}")
+  #           echo "dd_tags<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_tags_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
 
-            dd_integrations_string=$(yq '.integrations' "${{ inputs.matrix_path }}")
-            echo "dd_integrations<<EOF" >> $GITHUB_ENV
-            echo "$dd_integrations_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  #           dd_integrations_string=$(yq '.integrations' "${{ inputs.matrix_path }}")
+  #           echo "dd_integrations<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_integrations_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
 
-            # -- version 2.2 additions --
-            echo "dd_type=$(yq '.type' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
+  #           # -- version 2.2 additions --
+  #           echo "dd_type=$(yq '.type' "${{ inputs.matrix_path }}")" >> $GITHUB_ENV
 
-            dd_languages_string=$(yq '.languages' "${{ inputs.matrix_path }}")
-            echo "dd_languages<<EOF" >> $GITHUB_ENV
-            echo "$dd_languages_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  #           dd_languages_string=$(yq '.languages' "${{ inputs.matrix_path }}")
+  #           echo "dd_languages<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_languages_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
 
-            dd_ci_pipeline_fingerprints_string=$(yq '.ci-pipeline-fingerprints' "${{ inputs.matrix_path }}")
-            echo "dd_ci_pipeline_fingerprints<<EOF" >> $GITHUB_ENV
-            echo "$dd_ci_pipeline_fingerprints_string" >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
+  #           dd_ci_pipeline_fingerprints_string=$(yq '.ci-pipeline-fingerprints' "${{ inputs.matrix_path }}")
+  #           echo "dd_ci_pipeline_fingerprints<<EOF" >> $GITHUB_ENV
+  #           echo "$dd_ci_pipeline_fingerprints_string" >> $GITHUB_ENV
+  #           echo "EOF" >> $GITHUB_ENV
 
       # - name: Push service data into us5/datadog service catalog metadata
       #   uses: arcxp/datadog-service-catalog-metadata-provider@v2.3.0
