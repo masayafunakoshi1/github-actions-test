@@ -33,7 +33,7 @@ jobs:
           cmd: |
             for file in ${{steps.changed_files.outputs.all_changed_files}}; do
               if [[ $file == *"service.datadog.yaml" ]]; then
-                echo "$file"
+                echo "'$file'"
                 # yq -s '"new_file_" + $index' $file
               fi
             done
