@@ -40,7 +40,7 @@ links:
 # tags: ["service: pasithea", "team: sre", "org: mlb"]
 
 tags:
-  - "service: pasithea"
+  - "service: pasitheaa"
   - "team: sre"
   - "org: mlb"
 
@@ -61,7 +61,7 @@ type: "custom"
 
 links:
   - name: ""
-    url: "example.com"
+    url: "example.comm"
     type: ""
 
 tags:
