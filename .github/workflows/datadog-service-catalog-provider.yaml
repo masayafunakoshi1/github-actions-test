@@ -45,13 +45,24 @@ jobs:
           outputVal+="]"
           echo "$outputVal"
           echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
+
+  split_multi_yaml_files:
+    needs: check_for_service_datadog_yaml_files_changed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Split multi-YAML files
+        run: |
+          for file in ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}; do
+            yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+            echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+          done
+
   update_datadog_service_catalog_with_matrix_values:
     if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
-    needs: check_for_service_datadog_yaml_files_changed
+    needs: [check_for_service_datadog_yaml_files_changed, split_multi_yaml_files]
     strategy:
-      #Get list of service.datadog.yaml files from output in job above.
       matrix:
-        paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
+        paths: ${{ join(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files, ',')}}, ${{ needs.split_multi_yaml_files.outputs.split_files }}
     #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
     uses: ./.github/workflows/update-datadog-service-catalog.yaml
     secrets: inherit
