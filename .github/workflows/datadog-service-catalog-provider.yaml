@@ -28,10 +28,16 @@ jobs:
 
       - name: Check for multiple files in single yaml file
         id: separating_multi_files
-        run: |
-          for files in ${{steps.changed_files.outputs.all_changed_files}}; do
-            echo "$files"
-          done
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            for file in ${{steps.changed_files.outputs.all_changed_files}}; do
+              if [[ $file == *"service.datadog.yaml" ]]; then
+                yq -s '"new_file_" + $index' file
+              fi
+            done
+
+            ls
 
       - name: Check for service.datadog.yaml files changed and store them in array
         id: get_service_files
