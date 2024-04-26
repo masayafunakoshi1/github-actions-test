@@ -51,13 +51,15 @@ jobs:
     steps:
       - run: ls
       - name: Split multi-YAML files
-        run: |
-          filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
+        uses: mikefarah/yq@master
+        with:
+          cmd: |
+            filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
 
-          for file in $filepaths; do
-            yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
-            echo "::set-output name=split_files::${file%.yaml}_split.yaml"
-          done
+            for file in $filepaths; do
+              yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+              echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+            done
 
   update_datadog_service_catalog_with_matrix_values:
     if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
