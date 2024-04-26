@@ -70,6 +70,7 @@ jobs:
           cmd: |
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
             ls
+            echo "${{matrix.file_paths}}"
             
             new_output_val="["
             i=0
