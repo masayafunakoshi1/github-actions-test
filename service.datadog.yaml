@@ -13,7 +13,7 @@ contacts:
     contact: sre@mlb.com
 
 links: 
-  - name: o11y/pasithea
+  - name: o11y/pasitheaa
     url: <pasithea url>
     type: repo          
   - name: pasithea docs
@@ -61,7 +61,7 @@ type: "custom"
 
 links:
   - name: ""
-    url: "example.com"
+    url: "example.comm"
     type: ""
 
 tags:
