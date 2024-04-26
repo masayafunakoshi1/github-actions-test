@@ -50,6 +50,10 @@ jobs:
     needs: check_for_service_datadog_yaml_files_changed
     runs-on: ubuntu-latest
     steps:
+      - name: Get changed files across repo
+        id: changed_files
+        uses: tj-actions/changed-files@v42.0.4
+        
       - name: Split multi-YAML files
         run: |
           filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
