@@ -69,6 +69,8 @@ jobs:
       - name: Check if output works
         run: |
           ls
+          cat file_0.yml
+          cat file_1.yml
           echo "${{ steps.multi_yaml_split_vals.outputs.results }}"
           echo "${{ steps.multi_yaml_split_vals.outputs }}"
   
