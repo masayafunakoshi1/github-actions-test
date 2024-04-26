@@ -50,9 +50,8 @@ jobs:
     needs: check_for_service_datadog_yaml_files_changed
     runs-on: ubuntu-latest
     steps:
-      - name: Get changed files across repo
-        id: changed_files
-        uses: tj-actions/changed-files@v42.0.4
+      - name: Checkout current repo
+        uses: actions/checkout@v4.1.1
         
       - name: Split multi-YAML files
         run: |
