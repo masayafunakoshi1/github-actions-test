@@ -20,8 +20,7 @@ jobs:
         with:
           cmd: |
             for file in ${{ inputs.matrix_path }}; do
-              yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
-              echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+              yq -s '"file_" + $index' $file
             done
 
   update_datadog_service_catalog:
@@ -30,7 +29,8 @@ jobs:
     steps:
       - name: Check for split_files output
         run: |
-          echo ${{ needs.split_multi_yaml_files.outputs.split_files }}
+          ls
+          cat files_0.yml
       # - name: Checkout current repo
       #   uses: actions/checkout@v4.1.1
 
