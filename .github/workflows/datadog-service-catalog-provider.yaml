@@ -32,14 +32,13 @@ jobs:
         with:
           cmd: |
             changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
-            for file in ${changedFilesArr[@]}; do
+            
+            for file in $changedFilesArr; do
               if [[ $file == *"service.datadog.yaml" ]]; then
                 echo "$file"
-                yq -s '"new_file_" + $index' $file
+                # yq -s '"new_file_" + $index' $file
               fi
             done
-
-            ls
 
       - name: Check for service.datadog.yaml files changed and store them in array
         id: get_service_files
