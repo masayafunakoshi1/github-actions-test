@@ -31,10 +31,11 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            for file in ${{steps.changed_files.outputs.all_changed_files}}; do
+            changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
+            for file in ${changedFilesArr[@]}; do
               if [[ $file == *"service.datadog.yaml" ]]; then
                 echo "$file"
-                yq -s '"new_file_" + $index' "./" + $file
+                yq -s '"new_file_" + $index' $file
               fi
             done
 
