@@ -40,7 +40,7 @@ links:
 # tags: ["service: pasithea", "team: sre", "org: mlb"]
 
 tags:
-  - "service: pasithea"
+  - "service: pasitheaa"
   - "team: sre"
   - "org: mlb"
 
@@ -54,7 +54,7 @@ schema-version: v2.2
 dd-service: test
 team: ""
 application: test
-description: testingg
+description: testing
 lifecycle: ""
 tier: ""
 type: "custom"
