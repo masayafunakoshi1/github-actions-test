@@ -56,8 +56,8 @@ jobs:
       matrix:
         file_paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
     runs-on: ubuntu-latest
-    outputs:
-      list_of_service_datadog_files: ${{ steps.parsed_and_updated_service_files.outputs.filepaths }}
+    # outputs:
+    #   list_of_service_datadog_files: ${{ steps.parsed_and_updated_service_files.outputs.filepaths }}
     steps:
       - name: Checkout current repo
         id: parsed_and_updated_service_files
@@ -69,7 +69,8 @@ jobs:
           #loop through matrix yaml files and create new files, splitting all the yaml's with "---"
           cmd: |
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
-
+            ls
+            
             new_output_val="["
             i=0
             ls | grep "tmp_file_" | while read -r new_filepath; do
