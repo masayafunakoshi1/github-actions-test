@@ -30,21 +30,14 @@ jobs:
         id: get_service_files
         run: |
           changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
-          outputVal="["
-          i=0
+          finalArr=()
           for filepath in ${changedFilesArr[@]}; do
             if [[ $filepath == *"service.datadog.yaml" ]]; then
-              if [[ $i -eq 0 ]]; then
-                outputVal+="\"./$filepath\""
-              else
-                outputVal+=", \"./$filepath\""
-              fi
-              i=$(( i + 1 ))
+              finalArr+=$filepath
             fi
           done
-          outputVal+="]"
-          echo "$outputVal"
-          echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
+          echo "$finalArr"
+          echo "filepaths=$finalArr" >> "$GITHUB_OUTPUT"
 
   split_multi_yaml_files:
     needs: check_for_service_datadog_yaml_files_changed
@@ -55,7 +48,8 @@ jobs:
           filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
 
           for file in $filepaths; do
-            echo "$file"
+            yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+            echo "::set-output name=split_files::${file%.yaml}_split.yaml"
           done
 
   update_datadog_service_catalog_with_matrix_values:
