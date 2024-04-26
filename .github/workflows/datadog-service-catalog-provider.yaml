@@ -3,7 +3,7 @@ name: datadog-service-catalog-provider
 on:
   workflow_call:
     secrets:
-      dd_api_key: 
+      dd_api_key:
         description: 'A Datadog API key'
         required: true
       dd_app_key:
@@ -13,7 +13,7 @@ on:
 jobs:
   # Checks if any service.datadog.yaml exists and was edited -> puts all of their paths into an arr -> output for next job in "list_of_service_datadog_files"
   check_for_service_datadog_yaml_files_changed:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     #Output defined by bash script below. Getting list of service.datadog.yaml filepaths that were modified, in JSON array format ["filepath1", "filepath2", ...] 
     outputs:
       list_of_service_datadog_files: ${{ steps.get_service_files.outputs.filepaths }}
@@ -26,19 +26,7 @@ jobs:
         id: changed_files
         uses: tj-actions/changed-files@v42.0.4
 
-      - name: Check for multiple files in single yaml file
-        id: separating_multi_files
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            for file in ${{steps.changed_files.outputs.all_changed_files}}; do
-              if [[ $file == *"service.datadog.yaml" ]]; then
-                echo "'$file'"
-                # yq -s '"new_file_" + $index' $file
-              fi
-            done
-
-      - name: Check for service.datadog.yaml files changed and store them in array
+      - name: Check for service.datadog.yaml files changed. Then run update-datadog-service-catalog action
         id: get_service_files
         run: |
           changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
@@ -58,69 +46,25 @@ jobs:
           echo "$outputVal"
           echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
-  #if there's multiple files in one file with "---"", split them into separate files, then add them into the inputs.matrix_path
-  # look_for_multiple_files_in_single_yaml_and_separate:
-  #   if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
-  #   needs: check_for_service_datadog_yaml_files_changed
-  #   # outputs: list_of_service_datadog_files: ${{}}
-  #   strategy:
-  #     #Get list of service.datadog.yaml files from output in job above.
-  #     matrix:
-  #       file_paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
-  #   runs-on: ubuntu-latest
-  #   # outputs:
-  #   #   list_of_service_datadog_files: ${{ steps.parsed_and_updated_service_files.outputs.filepaths }}
-  #   steps:
-  #     - name: Checkout current repo
-  #       id: parsed_and_updated_service_files
-  #       uses: actions/checkout@v4.1.1
+  split_multi_yaml_files:
+    needs: check_for_service_datadog_yaml_files_changed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Split multi-YAML files
+        run: |
+          for file in ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}; do
+            yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+            echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+          done
 
-  #     - name: Parse if multiple files in one yaml file
-  #       uses: mikefarah/yq@master
-  #       with:
-  #         #loop through matrix yaml files and create new files, splitting all the yaml's with "---"
-  #         cmd: |
-  #           yq -s '"new_file_" + ${{matrix.file_paths}} + $index' ${{ matrix.file_paths }}
-  #           ls
-
-  #           new_output_val="["
-  #           i=0
-  #           ls | grep "tmp_file_" | while read -r new_filepath; do
-  #             echo $new_filepath
-  #               # if [[ $i -eq 0 ]]; then
-  #               #     new_output_val+="\""./$new_filepath\""
-  #               # else
-  #               #     new_output_val+=", \"./$new_filepath\""
-  #               # fi
-  #               # i=$(( i + 1 ))
-  #           done
-
-  #           # new_output_val+="\"]\""
-  #           # echo "filepaths=$new_output_val" >> "$GITHUB_OUTPUT"
-  #           # echo "$new_output_val"
-  
-
-  # call_reusable_workflow:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout current repo
-  #       id: parsed_and_updated_service_files
-  #       uses: actions/checkout@v4.1.1
-      
-  #     - name: Check if files exist
-  #       id: check_files_exist
-  #       run: |
-  #         ls
-
+  update_datadog_service_catalog_with_matrix_values:
+    if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
+    needs: [check_for_service_datadog_yaml_files_changed, split_multi_yaml_files]
+    strategy:
+      matrix:
+        paths: ${{ join(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files, ',')}}, ${{ needs.split_multi_yaml_files.outputs.split_files }}
     #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
-    # needs: update_datadog_service_catalog_with_matrix_values
-    # strategy:
-    #   #Get list of service.datadog.yaml files from output in job above.
-    #   matrix:
-    #     paths: ${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
-    # uses: ./.github/workflows/update-datadog-service-catalog.yaml
-    # secrets: inherit
-    # with:
-    #   matrix_path: ${{ matrix.paths }}
-
-
+    uses: ./.github/workflows/update-datadog-service-catalog.yaml
+    secrets: inherit
+    with:
+      matrix_path: ${{ matrix.paths }}
