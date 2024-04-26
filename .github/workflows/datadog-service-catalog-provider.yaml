@@ -71,30 +71,22 @@ jobs:
             echo "${{ matrix.file_paths }}"
             yq -s '"tmp_file_" + $index' ${{ matrix.file_paths }}
 
-            # new_output_val="["
-            
-            file_paths=()
+            new_output_val=""[""
             i=0
             ls | grep "tmp_file_" | while read -r new_filepath; do
-                # if [[ $new_filepath == "tmp_file_"* ]]; then
-                #     if [[ $i -eq 0 ]]; then
-                #         new_output_val+="\"./$new_filepath\""
-                #     else
-                #         new_output_val+=", \"./$new_filepath\""
-                #     fi
-                #     i=$(( i + 1 ))
-                # fi
-
-                file_paths+=("$new_filepath")
+                if [[ $new_filepath == "tmp_file_"* ]]; then
+                    if [[ $i -eq 0 ]]; then
+                        new_output_val+="\"\"./$new_filepath\"\""
+                    else
+                        new_output_val+="\", \"./$new_filepath\"\""
+                    fi
+                    i=$(( i + 1 ))
+                fi
             done
 
-            # new_output_val+="]"
-
-            echo "filepaths=${file_paths[@]}" >> "$GITHUB_OUTPUT"
-            echo "${file_paths[@]}"
-
-            # echo "filepaths=$new_output_val" >> "$GITHUB_OUTPUT"
-            # echo "$new_output_val"
+            new_output_val+=""]""
+            echo "filepaths=$new_output_val" >> "$GITHUB_OUTPUT"
+            echo "$new_output_val"
 
   # call_reusable_workflow:
   #   #Call the update-datadog-service-catalog action on each "path"(service.datadog.yaml file) found.
