@@ -23,13 +23,16 @@ jobs:
               yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
               echo "::set-output name=split_files::${file%.yaml}_split.yaml"
             done
-            ls
 
-  # update_datadog_service_catalog:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout current repo
-  #       uses: actions/checkout@v4.1.1
+  update_datadog_service_catalog:
+    needs: [split_multi_yaml_files]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for split_files output
+        run: |
+          echo ${{ needs.split_multi_yaml_files.outputs.split_files }}
+      # - name: Checkout current repo
+      #   uses: actions/checkout@v4.1.1
 
   #     - name: Update/create service data env variables
   #       uses: mikefarah/yq@master 
