@@ -19,9 +19,9 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            ls
             for file in ${{ inputs.matrix_path }}; do
-              yq -s '"file_" + $index' $file
+              yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+              echo "::set-output name=split_files::${file%.yaml}_split.yaml"
             done
             ls
 
