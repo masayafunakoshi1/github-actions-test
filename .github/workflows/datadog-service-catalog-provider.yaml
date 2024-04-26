@@ -30,14 +30,20 @@ jobs:
         id: get_service_files
         run: |
           changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
-          finalArr=()
+          outputVal=()
+          i=0
           for filepath in ${changedFilesArr[@]}; do
             if [[ $filepath == *"service.datadog.yaml" ]]; then
-              finalArr+=$filepath
+              if [[ $i -eq 0 ]]; then
+                outputVal+="\"./$filepath\""
+              else
+                outputVal+=", \"./$filepath\""
+              fi
+              i=$(( i + 1 ))
             fi
           done
-          echo "$finalArr"
-          echo "filepaths=$finalArr" >> "$GITHUB_OUTPUT"
+          echo "$outputVal"
+          echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
   split_multi_yaml_files:
     needs: check_for_service_datadog_yaml_files_changed
