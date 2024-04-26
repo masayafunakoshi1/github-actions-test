@@ -13,7 +13,7 @@ on:
 jobs:
   # Checks if any service.datadog.yaml exists and was edited -> puts all of their paths into an arr -> output for next job in "list_of_service_datadog_files"
   check_for_service_datadog_yaml_files_changed:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     #Output defined by bash script below. Getting list of service.datadog.yaml filepaths that were modified, in JSON array format ["filepath1", "filepath2", ...] 
     outputs:
       list_of_service_datadog_files: ${{ steps.get_service_files.outputs.filepaths }}
