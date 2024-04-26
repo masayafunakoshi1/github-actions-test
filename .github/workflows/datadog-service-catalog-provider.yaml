@@ -52,15 +52,21 @@ jobs:
     steps:
       - name: Split multi-YAML files
         run: |
-          filepaths=${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}
-          echo "${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}"
+          filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
           echo "$filepaths"
           echo "${{ fromJSON(needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files) }}"
 
-          # for file in "${filepaths[@]}"; do
-          #   yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
-          #   echo "::set-output name=split_files::${file%.yaml}_split.yaml"
-          # done
+          for file in ${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}; do
+            echo "$file"
+            # yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+            # echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+          done
+
+          for file in $filepaths; do
+            echo "$file"
+            # yq -s '"file_" + $index' $file > "${file%.yaml}_split.yaml"
+            # echo "::set-output name=split_files::${file%.yaml}_split.yaml"
+          done
 
   # update_datadog_service_catalog_with_matrix_values:
   #   if: needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files != '[]'
