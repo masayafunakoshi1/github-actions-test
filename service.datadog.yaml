@@ -10,7 +10,7 @@ contacts:
   - type: slack
     contact: https://app.slack.com/client/
   - type: email
-    contact: sre@mlb.co
+    contact: sre@mlb.com
 
 links: 
   - name: o11y/pasitheaa
