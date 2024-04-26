@@ -10,7 +10,7 @@ contacts:
   - type: slack
     contact: https://app.slack.com/client/
   - type: email
-    contact: sre@mlb.com
+    contact: sre@mlb.comm
 
 links: 
   - name: o11y/pasitheaa
@@ -54,7 +54,7 @@ schema-version: v2.2
 dd-service: test
 team: ""
 application: test
-description: testing
+description: testingg
 lifecycle: ""
 tier: ""
 type: "custom"
