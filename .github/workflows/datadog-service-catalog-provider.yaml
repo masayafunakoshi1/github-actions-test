@@ -49,10 +49,9 @@ jobs:
     needs: check_for_service_datadog_yaml_files_changed
     runs-on: ubuntu-latest
     steps:
+      - run: ls
       - name: Split multi-YAML files
         run: |
-          ls
-          ls ..
           filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
 
           for file in $filepaths; do
