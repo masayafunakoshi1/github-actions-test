@@ -60,7 +60,8 @@ jobs:
             filepaths=${{needs.check_for_service_datadog_yaml_files_changed.outputs.list_of_service_datadog_files}}
 
             for file in $filepaths; do
-              yq -s '"file_" + $index' $file
+              yq -s '"file_" + $index' "$file" > "${file%.yaml}_split.yaml"
+              echo "::set-output name=split_files::${file%.yaml}_split.yaml"
             done
             ls
 
