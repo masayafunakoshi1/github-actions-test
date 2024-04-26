@@ -27,6 +27,9 @@ jobs:
     needs: [split_multi_yaml_files]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4.1.1
+        
       - name: Check for split_files output
         run: |
           ls
