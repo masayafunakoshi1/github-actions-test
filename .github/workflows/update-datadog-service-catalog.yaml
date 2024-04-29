@@ -49,7 +49,7 @@ jobs:
 
   update_datadog_service_catalog:
     needs: split_multi_yaml_files
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     #Run another matrix with the new `file_*.yml` files to update service catalog on all yaml files/config("---") found. 
     strategy:
       matrix:
