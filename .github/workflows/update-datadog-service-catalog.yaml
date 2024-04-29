@@ -11,6 +11,7 @@ jobs:
   # I think I'd have to create another matrix in the job below, then have the next STEP run on that matrix https://stackoverflow.com/questions/59180385/using-an-array-of-values-to-repeat-a-step-in-github-actions-workflow
   split_multi_yaml_files:
     runs-on: ubuntu-latest
+    #add matrix up here
     steps:
       - name: Checkout current repo
         uses: actions/checkout@v4.1.1
@@ -25,6 +26,16 @@ jobs:
       # put update in same job as a step in order to pass context of new files
       # filter by specific files
       - name: check
+        uses: mikefarah/yq@master
+        with:
+          #files still exist in this step. We want to create a matrix in the step above then loop through that for the bottom two steps
+          cmd: |
+            ls
+            
+  run_through_matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checking if files still exist from job above
         uses: mikefarah/yq@master
         with:
           cmd: |
