@@ -30,7 +30,7 @@ jobs:
           outputVal="["
           i=0
           for filepath in *.yml; do
-            if [[$filepath == "file_*"]]; then
+            if [[ "$filepath" == "file_*" ]]; then
               if [[ $i -eq 0 ]]; then
                 outputVal+="\"./$filepath\""
               else
