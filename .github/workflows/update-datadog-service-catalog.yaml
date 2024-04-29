@@ -27,18 +27,21 @@ jobs:
       - name: Get the names of newly created files across the repo
         id: get_split_multi_yaml_files
         run: |
-          ls
-          find . -type d -exec echo '{}' \;
-
           outputVal="["
           i=0
           for filepath in *.yml; do
-            echo "$filepath"
+            if [[$filepath == "file_*"]]; then
+              if [[ $i -eq 0 ]]; then
+                outputVal+="\"./$filepath\""
+              else
+                outputVal+=", \"./$filepath\""
+              fi
+              i=$(( i + 1 ))
+            fi
           done
           outputVal+="]"
           echo "$outputVal"
-          # echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
-
+          echo "new_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
       # put update in same job as a step in order to pass context of new files
       # filter by specific files
