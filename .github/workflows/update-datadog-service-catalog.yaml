@@ -25,14 +25,18 @@ jobs:
             done
       
       - name: Get the names of newly created files across the repo
-        id: changed_files
-        uses: tj-actions/changed-files@v42.0.4
-
-      - name: Check to see if results are expected
-        id: get_service_files
+        id: get_split_multi_yaml_files
         run: |
-          changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
-          echo "$changedFilesArr"
+          ls
+
+          outputVal="["
+          i=0
+          for filepath in */; do
+            echo "$filepath"
+          done
+          outputVal+="]"
+          echo "$outputVal"
+          # echo "filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
 
       # put update in same job as a step in order to pass context of new files

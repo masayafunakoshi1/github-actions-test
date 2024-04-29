@@ -13,7 +13,7 @@ contacts:
     contact: sre@mlb.comm
 
 links: 
-  - name: o11y/pasitheaaa
+  - name: o11y/pasitheaa
     url: <pasithea url>
     type: repo          
   - name: pasithea docs
