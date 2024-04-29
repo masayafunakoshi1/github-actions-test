@@ -113,38 +113,33 @@ jobs:
         # If env.var is not found in the `Update/create service data env variables` step,
         # it will be defined here as empty or null automatically. Action will still work.
         run: |
-          schema-version: v2.2
-          datadog-hostname: api.us5.datadoghq.com
-          datadog-key: ${{ secrets.dd_api_key }}
-          datadog-app-key: ${{ secrets.dd_app_key }}
-
-          service-name: ${{ env.dd_service }}
-          team: ${{ env.dd_team }}
-          application: ${{ env.dd_application}}
-          description: ${{ env.dd_description }}
-          lifecycle: ${{ env.dd_lifecycle }}
-          tier: ${{ env.dd_tier }}
-
-          contacts: |
-            ${{ env.dd_contacts }}
-
-          links: |
-            ${{ env.dd_links }}
-          
-          tags: |
-            ${{ env.dd_tags }}
-
-          integrations: |
-            ${{ env.dd_integrations }}
-          
-          # version 2.2 additions 
-          type: ${{ env.dd_type }}
-
-          languages: |
-            ${{ env.dd_languages }}
-        
-          ci-pipeline-fingerprints: |
-            ${{ env.dd_ci_pipeline_fingerprints }}
+          schema="
+            schema-version: v2.2
+            datadog-hostname: api.us5.datadoghq.com
+            datadog-key: ${{ secrets.dd_api_key }}
+            datadog-app-key: ${{ secrets.dd_app_key }}
+            service-name: ${{ env.dd_service }}
+            team: ${{ env.dd_team }}
+            application: ${{ env.dd_application}}
+            description: ${{ env.dd_description }}
+            lifecycle: ${{ env.dd_lifecycle }}
+            tier: ${{ env.dd_tier }}
+            contacts: |
+              ${{ env.dd_contacts }}
+            links: |
+              ${{ env.dd_links }}
+            tags: |
+              ${{ env.dd_tags }}
+            integrations: |
+              ${{ env.dd_integrations }}
+            # version 2.2 additions 
+            type: ${{ env.dd_type }}
+            languages: |
+              ${{ env.dd_languages }}
+            ci-pipeline-fingerprints: |
+              ${{ env.dd_ci_pipeline_fingerprints }}
+          "
+          echo "$schema"
 
 #####################################
 
