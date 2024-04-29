@@ -47,17 +47,31 @@ jobs:
           echo "$outputVal"
           echo "new_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
-      # put update in same job as a step in order to pass context of new files
-      # filter by specific files
-      - name: update_datadog_service_catalog
+  update_datadog_service_catalog:
+    needs: split_multi_yaml_files
+    runs-on: ubuntu_latest
+    #Run another matrix with the new `file_*.yml` files to update service catalog on all yaml files/config("---") found. 
+    strategy:
+      matrix:
+        new_paths: ${{ fromJSON(needs.split_multi_yaml_files.outputs.new_files) }}
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4.1.1
+
+      - name: Split multi-YAML files to split same files in job above
         uses: mikefarah/yq@master
-        with: 
-        # Uses yq to read yaml file and parse specific values into env variables
-          # Bigger cmd blocks are for keeping formatting of multi-line strings
+        with:
           cmd: |
-            for filepath in ${{ fromJSON(steps.get_split_multi_yaml_files.outputs.new_filepaths) }}; do
-              echo "$filepath"
+            for file in ${{ inputs.matrix_path }}; do
+              yq -s '"file_" + $index' $file 
             done
+
+      - name: test
+        uses: mikefarah/yq@master 
+        with: 
+          cmd: |
+            ls
+
 #####################################
 
   # update_datadog_service_catalog:
