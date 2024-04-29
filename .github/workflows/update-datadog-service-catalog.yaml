@@ -55,7 +55,7 @@ jobs:
         # Uses yq to read yaml file and parse specific values into env variables
           # Bigger cmd blocks are for keeping formatting of multi-line strings
           cmd: |
-            for filepath in ${{ fromJson(steps.get_split_multi_yaml_files.outputs.new_filepaths) }}; do
+            for filepath in ${{ fromJSON(steps.get_split_multi_yaml_files.outputs.new_filepaths) }}; do
               echo "$filepath"
             done
 #####################################
