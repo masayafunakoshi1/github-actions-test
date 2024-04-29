@@ -66,11 +66,49 @@ jobs:
               yq -s '"file_" + $index' $file 
             done
 
-      - name: test
+      - name: Insert service metadata/definition into env variables
         uses: mikefarah/yq@master 
         with: 
+          # Uses yq to read yaml file and parse specific values into env variables
+            # Bigger cmd blocks are for keeping formatting of multi-line strings
           cmd: |
-            ls
+            echo "dd_service=$(yq '.dd-service' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_team=$(yq '.team' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_application=$(yq '.application' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_team=$(yq '.team' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_description=$(yq '.description' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_lifecycle=$(yq '.lifecycle' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+            echo "dd_tier=$(yq '.tier' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+
+            dd_contacts_string=$(yq '.contacts' "${{ matrix.new_paths }}")
+            echo "dd_contacts<<EOF" >> $GITHUB_ENV
+            echo "$dd_contacts_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            
+            dd_links_string=$(yq '.links' "${{ matrix.new_paths }}")
+            echo "dd_links<<EOF" >> $GITHUB_ENV
+            echo "$dd_links_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            dd_tags_string=$(yq '.tags' "${{ matrix.new_paths }}")
+            echo "dd_tags<<EOF" >> $GITHUB_ENV
+            echo "$dd_tags_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            dd_integrations_string=$(yq '.integrations' "${{ matrix.new_paths }}")
+            echo "dd_integrations<<EOF" >> $GITHUB_ENV
+            echo "$dd_integrations_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            # -- version 2.2 additions --
+            echo "dd_type=$(yq '.type' "${{ matrix.new_paths }}")" >> $GITHUB_ENV
+
+            dd_languages_string=$(yq '.languages' "${{ matrix.new_paths }}")
+            echo "dd_languages<<EOF" >> $GITHUB_ENV
+            echo "$dd_languages_string" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+
+            
 
 #####################################
 
