@@ -28,23 +28,35 @@ jobs:
       
       - name: Get the names of newly created files across the repo
         id: get_split_multi_yaml_files
+        ## output for matrix
+        # run: |
+        #   outputVal="["
+        #   i=0
+        #   for filepath in *.yml; do
+        #     if [[ "$filepath" == "file_"* ]]; then
+        #       if [[ $i -eq 0 ]]; then
+        #         outputVal+="\"./$filepath\""
+        #       else
+        #         outputVal+=", \"./$filepath\""
+        #       fi
+        #       i=$(( i + 1 ))
+        #     fi
+        #   done
+        #   outputVal+="]"
+
+        #   echo "$outputVal"
+        #   echo "new_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
+        ## output for array of strings
         run: |
-          outputVal="["
-          i=0
+          outputArr=()
           for filepath in *.yml; do
             if [[ "$filepath" == "file_"* ]]; then
-              if [[ $i -eq 0 ]]; then
-                outputVal+="\"./$filepath\""
-              else
-                outputVal+=", \"./$filepath\""
-              fi
-              i=$(( i + 1 ))
+              outputArr+=("$filepath")
             fi
           done
-          outputVal+="]"
 
-          echo "$outputVal"
-          echo "new_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
+          echo $outputArr
+          echo "new_filepaths=$outputArr" >> "$GITHUB_OUTPUT"
 
       # put update in same job as a step in order to pass context of new files
       # filter by specific files
