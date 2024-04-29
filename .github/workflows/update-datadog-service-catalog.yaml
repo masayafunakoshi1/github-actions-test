@@ -35,6 +35,9 @@ jobs:
   run_through_matrix:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4.1.1
+        
       - name: checking if files still exist from job above
         uses: mikefarah/yq@master
         with:
