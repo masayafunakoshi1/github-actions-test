@@ -23,7 +23,7 @@ jobs:
         with:
           cmd: |
             for file in ${{ inputs.matrix_path }}; do
-              yq -s '"file_" + $index' $file 
+              yq -s '"dd_svc_def_" + $index' $file 
             done
       
       - name: Get the names of newly created files across the repo
@@ -33,7 +33,7 @@ jobs:
           outputVal="["
           i=0
           for filepath in *.yml; do
-            if [[ "$filepath" == "file_"* ]]; then
+            if [[ "$filepath" == "dd_svc_def_"* ]]; then
               if [[ $i -eq 0 ]]; then
                 outputVal+="\"./$filepath\""
               else
@@ -50,7 +50,7 @@ jobs:
   update_datadog_service_catalog:
     needs: split_multi_yaml_files
     runs-on: ubuntu-latest
-    #Run another matrix with the new `file_*.yml` files to update service catalog on all yaml files/config("---") found. 
+    #Run another matrix with the new `dd_svc_def_*.yml` files to update service catalog on all yaml files/config("---") found. 
     strategy:
       matrix:
         new_paths: ${{ fromJSON(needs.split_multi_yaml_files.outputs.new_files) }}
@@ -63,7 +63,7 @@ jobs:
         with:
           cmd: |
             for file in ${{ inputs.matrix_path }}; do
-              yq -s '"file_" + $index' $file 
+              yq -s '"dd_svc_def_" + $index' $file 
             done
 
       - name: Insert service metadata/definition into env variables
@@ -107,8 +107,44 @@ jobs:
             echo "dd_languages<<EOF" >> $GITHUB_ENV
             echo "$dd_languages_string" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
+          
+      - name: Push service data into us5/datadog service catalog metadata
+        # uses: arcxp/datadog-service-catalog-metadata-provider@v2.3.0
+        # If env.var is not found in the `Update/create service data env variables` step,
+        # it will be defined here as empty or null automatically. Action will still work.
+        run: |
+          schema-version: v2.2
+          datadog-hostname: api.us5.datadoghq.com
+          datadog-key: ${{ secrets.dd_api_key }}
+          datadog-app-key: ${{ secrets.dd_app_key }}
 
-            
+          service-name: ${{ env.dd_service }}
+          team: ${{ env.dd_team }}
+          application: ${{ env.dd_application}}
+          description: ${{ env.dd_description }}
+          lifecycle: ${{ env.dd_lifecycle }}
+          tier: ${{ env.dd_tier }}
+
+          contacts: |
+            ${{ env.dd_contacts }}
+
+          links: |
+            ${{ env.dd_links }}
+          
+          tags: |
+            ${{ env.dd_tags }}
+
+          integrations: |
+            ${{ env.dd_integrations }}
+          
+          # version 2.2 additions 
+          type: ${{ env.dd_type }}
+
+          languages: |
+            ${{ env.dd_languages }}
+        
+          ci-pipeline-fingerprints: |
+            ${{ env.dd_ci_pipeline_fingerprints }}
 
 #####################################
 
