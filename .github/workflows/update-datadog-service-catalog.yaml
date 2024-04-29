@@ -31,7 +31,7 @@ jobs:
           i=0
           for filepath in *.yml; do
             echo "$filepath"
-            if [[ "$filepath" == "*file_*" ]]; then
+            if [[ "$filepath" == "file_"* ]]; then
               if [[ $i -eq 0 ]]; then
                 outputVal+="\"./$filepath\""
               else
@@ -41,6 +41,7 @@ jobs:
             fi
           done
           outputVal+="]"
+
           echo "$outputVal"
           echo "new_filepaths=$outputVal" >> "$GITHUB_OUTPUT"
 
