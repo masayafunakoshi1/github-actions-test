@@ -23,6 +23,18 @@ jobs:
             for file in ${{ inputs.matrix_path }}; do
               yq -s '"file_" + $index' $file 
             done
+      
+      - name: Get the names of newly created files across the repo
+        id: changed_files
+        uses: tj-actions/changed-files@v42.0.4
+
+      - name: Check to see if results are expected
+        id: get_service_files
+        run: |
+          changedFilesArr=(${{steps.changed_files.outputs.all_changed_files}})
+          echo "$changedFilesArr"
+
+
       # put update in same job as a step in order to pass context of new files
       # filter by specific files
       - name: check
@@ -32,17 +44,7 @@ jobs:
           cmd: |
             ls
             
-  run_through_matrix:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout current repo
-        uses: actions/checkout@v4.1.1
-        
-      - name: checking if files still exist from job above
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            ls
+  #Files stop existing in a new job so must use the same job with steps
 
       # - name: Update/create service data env variables
       #   uses: mikefarah/yq@master 
